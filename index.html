@@ -395,7 +395,6 @@
         </div>
     </div>
 
-    <!-- Toolbar 2: Settings -->
     <div class="toolbar">
         <div class="tool-group">
             <label>Цвет:</label>
@@ -427,7 +426,6 @@
         </div>
     </div>
 
-    <!-- Toolbar 3: Actions -->
     <div class="toolbar">
         <div class="tool-group">
             <label>Фон:</label>
@@ -448,22 +446,18 @@
         <button class="btn btn-info" onclick="showGallery()">🖼️ Галерея</button>
     </div>
 
-    <!-- Canvas -->
     <div class="canvas-container">
         <canvas id="canvas" width="900" height="550"></canvas>
     </div>
 
-    <!-- Status Bar -->
     <div class="status-bar">
         <div class="status-item">Координаты: <span id="coordsDisplay">0, 0</span></div>
         <div class="status-item">Инструмент: <span id="toolDisplay">Кисть</span></div>
         <div class="status-item">Сохранено: <span id="savedCount">0</span></div>
     </div>
 
-    <!-- Cursor Preview -->
     <div class="cursor-preview" id="cursorPreview"></div>
 
-    <!-- Gallery Modal -->
     <div class="modal-overlay" id="galleryModal" onclick="closeGallery(event)">
         <div class="modal">
             <h2>🖼️ Галерея работ</h2>
@@ -482,7 +476,6 @@
         const ctx = canvas.getContext('2d');
         const cursorPreview = document.getElementById('cursorPreview');
 
-        // State
         let currentTool = 'brush';
         let currentColor = '#a78bfa';
         let currentSize = 5;
@@ -494,15 +487,12 @@
         let startX = 0;
         let startY = 0;
 
-        // History for undo/redo
         let history = [];
         let historyIndex = -1;
         let maxHistory = 30;
 
-        // Gallery
         let gallery = JSON.parse(localStorage.getItem('drawGallery') || '[]');
 
-        // Init
         function init() {
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -510,7 +500,6 @@
             updateSavedCount();
         }
 
-        // Save state for undo
         function saveState() {
             historyIndex++;
             history = history.slice(0, historyIndex);
@@ -544,7 +533,6 @@
             img.src = dataUrl;
         }
 
-        // Tools
         function setTool(tool) {
             currentTool = tool;
 
@@ -619,7 +607,6 @@
             document.querySelectorAll('.bg-color-btn').forEach(b => b.classList.remove('active'));
             if (el) el.classList.add('active');
 
-            // Redraw bg keeping content
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -627,7 +614,6 @@
             saveState();
         }
 
-        // Drawing
         let snapshotBeforeShape = null;
 
         canvas.addEventListener('mousedown', (e) => {
@@ -677,7 +663,6 @@
 
             document.getElementById('coordsDisplay').textContent = `${Math.round(x)}, ${Math.round(y)}`;
 
-            // Cursor preview
             cursorPreview.style.display = 'block';
             cursorPreview.style.left = e.clientX + 'px';
             cursorPreview.style.top = e.clientY + 'px';
@@ -736,7 +721,6 @@
             }
         });
 
-        // Touch support
         canvas.addEventListener('touchstart', handleTouch);
         canvas.addEventListener('touchmove', handleTouch);
         canvas.addEventListener('touchend', () => {
@@ -761,7 +745,6 @@
             }
         }
 
-        // Draw shapes
         function drawShape(shape, x1, y1, x2, y2) {
             ctx.globalAlpha = currentOpacity;
             ctx.strokeStyle = currentColor;
@@ -795,7 +778,6 @@
             ctx.globalAlpha = 1;
         }
 
-        // Flood fill
         function floodFill(x, y, fillColor) {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
@@ -847,7 +829,6 @@
             ctx.putImageData(imageData, 0, 0);
         }
 
-        // Clear
         function clearCanvas() {
             if (confirm('Очистить холст?')) {
                 ctx.fillStyle = bgColor;
@@ -864,7 +845,6 @@
             link.click();
         }
 
-        // Gallery
         function saveToGallery() {
             const dataUrl = canvas.toDataURL('image/png', 0.6);
             gallery.push({
@@ -923,7 +903,6 @@
             document.getElementById('savedCount').textContent = gallery.length;
         }
 
-        // Notification
         function showNotification(text) {
             const notif = document.createElement('div');
             notif.textContent = text;
@@ -941,7 +920,6 @@
             }, 2000);
         }
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
             if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
@@ -951,7 +929,6 @@
             if (e.key === 'f') setTool('fill');
         });
 
-        // Init
         init();
     </script>
 
